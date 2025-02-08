@@ -18,17 +18,13 @@ import {
 } from './schema';
 import { BlockKind } from '@/components/block';
 
-if (!process.env.POSTGRES_URL) {
-  throw new Error('POSTGRES_URL is not defined');
-}
+// Optionally, if not using email/pass login, you can
+// use the Drizzle adapter for Auth.js / NextAuth
+// https://authjs.dev/reference/adapter/drizzle
 
-const client = postgres(process.env.POSTGRES_URL, { max: 1 });
-export const db = drizzle(client, { logger: process.env.NODE_ENV === 'development' });
-
-// Export a function to close the connection
-export const closeConnection = async () => {
-  await client.end();
-};
+// biome-ignore lint: Forbidden non-null assertion.
+const client = postgres(process.env.POSTGRES_URL!);
+const db = drizzle(client);
 
 export async function getUser(email: string): Promise<Array<User>> {
   try {
