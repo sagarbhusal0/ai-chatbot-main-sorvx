@@ -1,4 +1,4 @@
-import { Together } from '@vercel/ai-sdk';
+import { togetherai } from '@ai-sdk/together';
 import {
   customProvider,
   extractReasoningMiddleware,
@@ -7,24 +7,21 @@ import {
 
 export const DEFAULT_CHAT_MODEL: string = 'chat-model-large';
 
-const together = new Together({
-  apiKey: process.env.TOGETHER_API_KEY || '',
-});
-
 export const myProvider = customProvider({
   languageModels: {
-    'chat-model-small': together.generate('google/gemma-2b-it'),
-    'chat-model-large': together.generate('meta-llama/Llama-3.3-70B-Instruct-Turbo-Free'),
+    'chat-model-small': togetherai('google/gemma-2b-it'),
+    'chat-model-large': togetherai('meta-llama/Llama-3.3-70B-Instruct-Turbo-Free'),
     'chat-model-reasoning': wrapLanguageModel({
-      model: together.generate('deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free'),
+      model: togetherai('deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free'),
       middleware: extractReasoningMiddleware({ tagName: 'think' }),
     }),
-    'title-model': together.generate('meta-llama/Llama-Vision-Free'),
-    'block-model': together.generate('meta-llama/Llama-Vision-Free'),
+
+    'title-model': togetherai('meta-llama/Llama-Vision-Free'),
+    'block-model': togetherai('meta-llama/Llama-Vision-Free'),
   },
   imageModels: {
-    'small-model': together.generateImage('black-forest-labs/FLUX.1-schnell-Free'),
-    'large-model': together.generateImage('black-forest-labs/FLUX.1-schnell-Free'),
+    'small-model': togetherai.image('black-forest-labs/FLUX.1-schnell-Free'),
+    'large-model': togetherai.image('black-forest-labs/FLUX.1-schnell-Free'),
   },
 });
 
@@ -47,7 +44,7 @@ export const chatModels: Array<ChatModel> = [
   },
   {
     id: 'chat-model-reasoning',
-    name: 'Sorvx - R1',
+    name: 'Sorvx R1',
     description: 'Uses advanced reasoning',
   },
 ];
