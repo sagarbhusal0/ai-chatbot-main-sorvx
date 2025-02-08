@@ -1,4 +1,4 @@
-import { togetherai } from '@ai-sdk/together';
+import { Together } from '@vercel/ai-sdk';
 import {
   customProvider,
   extractReasoningMiddleware,
@@ -7,21 +7,24 @@ import {
 
 export const DEFAULT_CHAT_MODEL: string = 'chat-model-large';
 
+const together = new Together({
+  apiKey: process.env.TOGETHER_API_KEY || '',
+});
+
 export const myProvider = customProvider({
   languageModels: {
-    'chat-model-small': togetherai('google/gemma-2b-it'),
-    'chat-model-large': togetherai('meta-llama/Llama-3.3-70B-Instruct-Turbo-Free'),
+    'chat-model-small': together.chat('google/gemma-2b-it'),
+    'chat-model-large': together.chat('meta-llama/Llama-3.3-70B-Instruct-Turbo-Free'),
     'chat-model-reasoning': wrapLanguageModel({
-      model: togetherai('deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free'),
+      model: together.chat('deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free'),
       middleware: extractReasoningMiddleware({ tagName: 'think' }),
     }),
-
-    'title-model': togetherai('meta-llama/Llama-Vision-Free'),
-    'block-model': togetherai('meta-llama/Llama-Vision-Free'),
+    'title-model': together.chat('meta-llama/Llama-Vision-Free'),
+    'block-model': together.chat('meta-llama/Llama-Vision-Free'),
   },
   imageModels: {
-    'small-model': togetherai.image('black-forest-labs/FLUX.1-schnell-Free'),
-    'large-model': togetherai.image('black-forest-labs/FLUX.1-schnell-Free'),
+    'small-model': together.image('black-forest-labs/FLUX.1-schnell-Free'),
+    'large-model': together.image('black-forest-labs/FLUX.1-schnell-Free'),
   },
 });
 
