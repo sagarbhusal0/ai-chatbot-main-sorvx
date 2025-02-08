@@ -12,17 +12,20 @@ const runMigrate = async () => {
     throw new Error('POSTGRES_URL is not defined');
   }
 
-  const connection = postgres(process.env.POSTGRES_URL, { max: 1 });
-  const db = drizzle(connection);
+  const sql = postgres(process.env.POSTGRES_URL, { max: 1 });
+  const db = drizzle(sql);
 
   console.log('⏳ Running migrations...');
 
-  const start = Date.now();
-  await migrate(db, { migrationsFolder: './lib/db/migrations' });
-  const end = Date.now();
-
-  console.log('✅ Migrations completed in', end - start, 'ms');
-  process.exit(0);
+  try {
+    await migrate(db, { migrationsFolder: 'lib/db/migrations' });
+    console.log('✅ Migrations completed successfully');
+  } catch (error) {
+    console.error('❌ Migration failed:', error);
+    throw error;
+  } finally {
+    await sql.end();
+  }
 };
 
 runMigrate().catch((err) => {
