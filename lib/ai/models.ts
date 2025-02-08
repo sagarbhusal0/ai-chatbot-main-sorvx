@@ -13,18 +13,18 @@ const together = new Together({
 
 export const myProvider = customProvider({
   languageModels: {
-    'chat-model-small': together.chat('google/gemma-2b-it'),
-    'chat-model-large': together.chat('meta-llama/Llama-3.3-70B-Instruct-Turbo-Free'),
+    'chat-model-small': together.generate('google/gemma-2b-it'),
+    'chat-model-large': together.generate('meta-llama/Llama-3.3-70B-Instruct-Turbo-Free'),
     'chat-model-reasoning': wrapLanguageModel({
-      model: together.chat('deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free'),
+      model: together.generate('deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free'),
       middleware: extractReasoningMiddleware({ tagName: 'think' }),
     }),
-    'title-model': together.chat('meta-llama/Llama-Vision-Free'),
-    'block-model': together.chat('meta-llama/Llama-Vision-Free'),
+    'title-model': together.generate('meta-llama/Llama-Vision-Free'),
+    'block-model': together.generate('meta-llama/Llama-Vision-Free'),
   },
   imageModels: {
-    'small-model': together.image('black-forest-labs/FLUX.1-schnell-Free'),
-    'large-model': together.image('black-forest-labs/FLUX.1-schnell-Free'),
+    'small-model': together.generateImage('black-forest-labs/FLUX.1-schnell-Free'),
+    'large-model': together.generateImage('black-forest-labs/FLUX.1-schnell-Free'),
   },
 });
 
